@@ -208,7 +208,7 @@ find-repo-on-current-path-or-above(){
 	return $OUTCOME;
 }
 
-if [[ "$#" -eq 0 ]]; then
+if [[ "$#" -eq 0 || "$1" == "help" || "$1" == "--help" ]]; then
 	echo "";
 	echo "usage:";
 	echo "------";
@@ -224,6 +224,7 @@ if [[ "$#" -eq 0 ]]; then
 	echo "list-repositories <groupname>: list repositories linked to group";
 	echo "add-snapshot <groupname>: save git state snapshot of all repositories linked to group";
 	echo "checkout-snapshot <groupname>: checkout the git state found in last snapshot for the repositories other than this current one and based on current one."
+	echo "help: displays this command overview (as does --help or no command at all)";
 	exit;
 fi
 
@@ -251,6 +252,10 @@ fi
 
 if [[ "$1" = "list-repositories" ]]; then
 	jq-list-repositories "$2";
+	for repo in "${RETVAL[@]}";
+	do
+		echo "$repo" | sed 's/"//g';
+	done
 fi
 
 if [[ "$1" = "add-snapshot" ]]; then
